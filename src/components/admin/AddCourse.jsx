@@ -6,12 +6,6 @@ import { Navigate } from 'react-router-dom';
 
 const AddCourse = () => {
 
-//   const {user}=useAuth();
-
-//   if (user.role !== 'ADMIN') {
-//     return <Navigate to="/home" />;
-// }
-
   const [courseCode, setCourseCode] = useState('');
   const [courseName, setCourseName] = useState('');
   const [yearOfOffering, setYearOfOffering] = useState('1'); 

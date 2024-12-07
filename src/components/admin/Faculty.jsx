@@ -115,8 +115,6 @@ const Faculty = () => {
                     ))}
                 </tbody>
             </Table>
-
-            {/* Update Modal */}
             {selectedFaculty && (
                 <Modal show={showModal} onHide={() => setShowModal(false)}>
                     <Modal.Header closeButton>

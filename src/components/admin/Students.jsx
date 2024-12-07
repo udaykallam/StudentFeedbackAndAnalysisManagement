@@ -85,8 +85,6 @@ const Students = () => {
         <Home/>
         <div className="container mt-5">
             <h2>Students List</h2>
-
-            {/* Search Bar */}
             <Form.Group className="mb-3">
                 <Form.Control
                     type="text"
@@ -138,8 +136,6 @@ const Students = () => {
                     ))}
                 </tbody>
             </Table>
-
-            {/* Update Modal */}
             {selectedStudent && (
                 <Modal show={showModal} onHide={() => setShowModal(false)}>
                     <Modal.Header closeButton>

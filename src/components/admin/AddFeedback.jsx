@@ -1,176 +1,175 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import Home from "../Navbar";
 
 const AddFeedback = () => {
-  const [title, setTitle] = useState("");
-  const [courseId, setCourseId] = useState("");
-  const [courses, setCourses] = useState([]); // Stores available courses
-  const [expirationDate, setExpirationDate] = useState("");
-  const [questions, setQuestions] = useState([]);
+  const [formName, setFormName] = useState(""); 
+  const [questions, setQuestions] = useState([
+    { questionText: "", options: [""] } 
+  ]);
 
-  // Fetch courses from the backend
-  useEffect(() => {
-    const fetchCourses = async () => {
-      try {
-        const response = await axios.get("http://localhost:8080/api/courses/all"); // Example endpoint
-        setCourses(response.data);
-      } catch (error) {
-        console.error("Error fetching courses:", error);
-      }
-    };
-    fetchCourses();
-  }, []);
-
-  // Add a new question to the form
-  const handleAddQuestion = () => {
-    setQuestions([...questions, { questionText: "", options: ["", ""] }]);
-  };
-
-  // Update question text
-  const handleQuestionChange = (index, value) => {
-    const updatedQuestions = [...questions];
-    updatedQuestions[index].questionText = value;
-    setQuestions(updatedQuestions);
-  };
-
-  // Update question options
-  const handleOptionChange = (qIndex, oIndex, value) => {
-    const updatedQuestions = [...questions];
-    updatedQuestions[qIndex].options[oIndex] = value;
-    setQuestions(updatedQuestions);
-  };
-
-  // Handle form submission
-  const handleSubmit = async () => {
-    const feedbackForm = {
-      courseId: parseInt(courseId),
-      title,
-      expirationDate,
-      questions,
-    };
-
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
-      await axios.post("http://localhost:8080/api/feedback/create", feedbackForm);
+      await axios.post("http://localhost:8080/api/feedback/create", {
+        formName,
+        questions,
+      });
       alert("Feedback form created successfully!");
+      setFormName(""); 
+      setQuestions([{ questionText: "", options: [""] }]); 
     } catch (error) {
-      console.error("Error creating feedback form:", error);
-      alert("Failed to create feedback form.");
+      console.error(error);
+      alert("Failed to create feedback form. Please try again.");
     }
+  };
+
+  const addQuestion = () => setQuestions([...questions, { questionText: "", options: [""] }]);
+
+  const updateQuestionText = (index, value) => {
+    const updatedQuestions = [...questions];
+    updatedQuestions[index].questionText = value; 
+    setQuestions(updatedQuestions);
+  };
+
+  const addOption = (questionIndex) => {
+    const updatedQuestions = [...questions];
+    updatedQuestions[questionIndex].options.push("");
+    setQuestions(updatedQuestions);
+  };
+
+  const updateOption = (questionIndex, optionIndex, value) => {
+    const updatedQuestions = [...questions];
+    updatedQuestions[questionIndex].options[optionIndex] = value;
+    setQuestions(updatedQuestions);
   };
 
   return (
     <>
-    <Home/>
-    <div className="container mt-5">
-      <h2 className="text-center mb-4">Add Feedback Form</h2>
-      <div className="mb-3">
-        <label htmlFor="title" className="form-label">
-          Feedback Title
-        </label>
-        <input
-          type="text"
-          id="title"
-          className="form-control"
-          placeholder="Enter feedback title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
-      </div>
-      <div className="mb-3">
-        <label htmlFor="courseId" className="form-label">
-          Select Course
-        </label>
-        <select
-          id="courseId"
-          className="form-select"
-          value={courseId}
-          onChange={(e) => setCourseId(e.target.value)}
-        >
-          <option value="">Select a course</option>
-          {courses.map((course) => (
-            <option key={course.id} value={course.id}>
-              {course.courseName}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div className="mb-3">
-        <label htmlFor="expirationDate" className="form-label">
-          Expiration Date
-        </label>
-        <input
-          type="datetime-local"
-          id="expirationDate"
-          className="form-control"
-          value={expirationDate}
-          onChange={(e) => setExpirationDate(e.target.value)}
-        />
-      </div>
-      <button
-        className="btn btn-primary mb-3"
-        onClick={handleAddQuestion}
-      >
-        Add Question
-      </button>
-      {questions.map((question, qIndex) => (
-        <div key={qIndex} className="mb-4">
-          <h5>Question {qIndex + 1}</h5>
-          <div className="mb-2">
-            <label htmlFor={`question-${qIndex}`} className="form-label">
-              Question Text
-            </label>
-            <input
-              type="text"
-              id={`question-${qIndex}`}
-              className="form-control"
-              placeholder="Enter question"
-              value={question.questionText}
-              onChange={(e) => handleQuestionChange(qIndex, e.target.value)}
-            />
-          </div>
-          {question.options.map((option, oIndex) => (
-            <div key={oIndex} className="mb-2">
-              <label
-                htmlFor={`option-${qIndex}-${oIndex}`}
-                className="form-label"
-              >
-                Option {oIndex + 1}
-              </label>
+      <Home />
+      <div style={styles.container}>
+        <h2 style={styles.heading}>Create Feedback Form</h2>
+        <form onSubmit={handleSubmit} style={styles.form}>
+          <input
+            type="text"
+            placeholder="Form Title"
+            value={formName}
+            onChange={(e) => setFormName(e.target.value)}
+            style={styles.input}
+          />
+          {questions.map((question, questionIndex) => (
+            <div key={questionIndex} style={styles.questionContainer}>
               <input
                 type="text"
-                id={`option-${qIndex}-${oIndex}`}
-                className="form-control"
-                placeholder={`Enter option ${oIndex + 1}`}
-                value={option}
-                onChange={(e) =>
-                  handleOptionChange(qIndex, oIndex, e.target.value)
-                }
+                placeholder={`Question ${questionIndex + 1}`}
+                value={question.questionText}
+                onChange={(e) => updateQuestionText(questionIndex, e.target.value)}
+                style={styles.input}
               />
+              <div style={styles.optionsContainer}>
+                <p style={styles.optionsLabel}>Options:</p>
+                {question.options.map((option, optionIndex) => (
+                  <div key={optionIndex} style={styles.optionItem}>
+                    <input
+                      type="text"
+                      placeholder={`Option ${optionIndex + 1}`}
+                      value={option}
+                      onChange={(e) =>
+                        updateOption(questionIndex, optionIndex, e.target.value)
+                      }
+                      style={styles.optionInput}
+                    />
+                  </div>
+                ))}
+                <button
+                  type="button"
+                  onClick={() => addOption(questionIndex)}
+                  style={styles.addButton}
+                >
+                  Add Option
+                </button>
+              </div>
             </div>
           ))}
-          <button
-            className="btn btn-secondary"
-            onClick={() =>
-              setQuestions(
-                questions.map((q, index) =>
-                  index === qIndex
-                    ? { ...q, options: [...q.options, ""] }
-                    : q
-                )
-              )
-            }
-          >
-            Add Option
+          <button type="button" onClick={addQuestion} style={styles.addButton}>
+            Add Question
           </button>
-        </div>
-      ))}
-      <button className="btn btn-success" onClick={handleSubmit}>
-        Submit Feedback Form
-      </button>
-    </div>
+          <button type="submit" style={styles.submitButton}>
+            Submit
+          </button>
+        </form>
+      </div>
     </>
   );
+};
+
+
+const styles = {
+  container: {
+    margin: "20px auto",
+    padding: "20px",
+    maxWidth: "800px",
+    backgroundColor: "#f9f9f9",
+    borderRadius: "8px",
+    boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
+  },
+  heading: {
+    textAlign: "center",
+    color: "#333",
+    marginBottom: "20px",
+  },
+  form: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "15px",
+  },
+  input: {
+    padding: "10px",
+    fontSize: "16px",
+    border: "1px solid #ccc",
+    borderRadius: "4px",
+  },
+  questionContainer: {
+    marginBottom: "20px",
+    padding: "10px",
+    border: "1px solid #ddd",
+    borderRadius: "4px",
+    backgroundColor: "#fff",
+  },
+  optionsContainer: {
+    marginTop: "10px",
+  },
+  optionsLabel: {
+    fontWeight: "bold",
+  },
+  optionItem: {
+    marginBottom: "10px",
+  },
+  optionInput: {
+    padding: "8px",
+    fontSize: "14px",
+    border: "1px solid #ccc",
+    borderRadius: "4px",
+    width: "100%",
+  },
+  addButton: {
+    padding: "8px 12px",
+    backgroundColor: "#007bff",
+    color: "#fff",
+    border: "none",
+    borderRadius: "4px",
+    cursor: "pointer",
+    marginTop: "10px",
+  },
+  submitButton: {
+    padding: "12px",
+    backgroundColor: "#28a745",
+    color: "#fff",
+    border: "none",
+    borderRadius: "4px",
+    fontSize: "16px",
+    cursor: "pointer",
+  },
 };
 
 export default AddFeedback;

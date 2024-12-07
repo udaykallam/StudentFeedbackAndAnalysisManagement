@@ -9,7 +9,6 @@ const Students = () => {
     const [filteredStudents, setFilteredStudents] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
 
-    // Fetch all students
     useEffect(() => {
         axios.get('http://localhost:8080/api/faculty/students')
             .then(response => {
@@ -21,8 +20,6 @@ const Students = () => {
                 toast.error('Error fetching student data');
             });
     }, []);
-
-    // Search handler
     const handleSearch = (e) => {
         const query = e.target.value.toLowerCase();
         setSearchQuery(query);
@@ -42,8 +39,6 @@ const Students = () => {
             <Home />
             <div className="container mt-5">
                 <h2>Students List</h2>
-
-                {/* Search Bar */}
                 <Form.Group className="mb-3">
                     <Form.Control
                         type="text"
@@ -52,8 +47,6 @@ const Students = () => {
                         onChange={handleSearch}
                     />
                 </Form.Group>
-
-                {/* Students Table */}
                 <Table striped bordered hover>
                     <thead>
                         <tr>

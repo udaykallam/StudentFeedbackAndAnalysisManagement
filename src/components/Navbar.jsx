@@ -49,6 +49,9 @@ const Home = () => {
                      {
                         user.role=='ADMIN' && <Nav.Link href="/addfeedback">Feedback</Nav.Link>
                     }
+                       {
+                        user.role=='ADMIN' && <Nav.Link href="/analysis">Analysis</Nav.Link>
+                    }
                      {
                         user.role=='Student' && <Nav.Link href="/register">Register</Nav.Link>
                     }
@@ -56,8 +59,11 @@ const Home = () => {
                         user.role=='Student' && <Nav.Link href="/courses">My Courses</Nav.Link>
                     }
                       {
-                        user.role=='Student' && <Nav.Link href="/feedback">Feedback</Nav.Link>
+                        user.role=='Student' && <Nav.Link href="/feedbacklist">Feedback</Nav.Link>
                     }
+                     {/* {
+                        user.role=='Student' && <Nav.Link href="/viewfeedback">View Feedback</Nav.Link>
+                    } */}
                      {
                         user.role=='Faculty' && <Nav.Link href="/mycourses">My courses</Nav.Link>
                     }

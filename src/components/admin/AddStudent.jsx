@@ -17,7 +17,7 @@ const AddStudent = () => {
     });
 
     const [csvFile, setCsvFile] = useState(null);
-    const [loading, setLoading] = useState(false); // State for loading
+    const [loading, setLoading] = useState(false);
     const { user } = useAuth();
 
     const handleChange = (e) => {
@@ -51,7 +51,7 @@ const AddStudent = () => {
         e.preventDefault();
         if (!validateForm()) return;
 
-        setLoading(true); // Start loading
+        setLoading(true); 
         try {
             const response = await fetch('http://localhost:8080/api/admin/add-student', {
                 method: 'POST',
@@ -78,7 +78,7 @@ const AddStudent = () => {
             console.error('Error:', error);
             toast.error('An error occurred. Please try again later.');
         } finally {
-            setLoading(false); // Stop loading
+            setLoading(false); 
         }
     };
 
@@ -92,7 +92,7 @@ const AddStudent = () => {
             return;
         }
 
-        setLoading(true); // Start loading
+        setLoading(true); 
         const formData = new FormData();
         formData.append("file", csvFile);
 
@@ -104,7 +104,7 @@ const AddStudent = () => {
 
             if (response.ok) {
                 toast.success("CSV file uploaded successfully!");
-                setCsvFile(null); // Clear file after upload
+                setCsvFile(null); 
             } else {
                 const errorMessage = await response.text();
                 toast.error(errorMessage);
@@ -113,7 +113,7 @@ const AddStudent = () => {
             console.error("Error:", error);
             toast.error("An error occurred during file upload. Please try again.");
         } finally {
-            setLoading(false); // Stop loading
+            setLoading(false);
         }
     };
 
@@ -133,8 +133,6 @@ const AddStudent = () => {
             <Home />
             <div className="container mt-5">
                 <h2>Add Student</h2>
-
-                {/* Show Loading component if loading state is true */}
                 {loading ? (
                     <Loading />
                 ) : (

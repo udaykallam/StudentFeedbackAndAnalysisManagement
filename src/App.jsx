@@ -17,6 +17,11 @@ import AddFeedback from './components/admin/AddFeedback.jsx'
 import Student from './components/faculty/Students.jsx'
 import MyCourses from './components/faculty/MyCourses.jsx'
 import Feedback from './components/student/Feedback.jsx'
+import ForgotPassword from './components/ForgotPassword.jsx'
+import ResetPassword from './components/ResetPassword.jsx'
+import ViewFeedback from './components/student/ViewFeedback.jsx'
+import FeedbackList from './components/student/FeedbackList.jsx'
+import FeedbackForms from './components/admin/Analysis.jsx'
 
 function App() {
 
@@ -32,6 +37,8 @@ function App() {
      <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/home" element={<Home />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/logout" element={<Logout />} />
         <Route path="/loading" element={<Loading />} />
         <Route path="*" element={<Error />} />
@@ -42,13 +49,16 @@ function App() {
         <Route path="/students" element={<Students/>} />
         <Route path="/faculty" element={<Faculty />} />
         <Route path="/addfeedback" element={<AddFeedback/>} />
+        <Route path="/analysis" element={<FeedbackForms/>} />
 
         <Route path="/student-info" element={<Student/>} /> 
         <Route path="/mycourses" element={<MyCourses />} />
 
         <Route path="/register" element={<Courses />} />
         <Route path="/courses" element={<ViewCourses />} />
-        <Route path="/feedback" element={<Feedback/>} />
+        <Route path="/feedbacklist" element={<FeedbackList />} />
+        <Route path="/feedback/:formId" element={<Feedback/>} />
+        <Route path="/viewfeedback" element={<ViewFeedback/>} />
 
         {/* Test */}
         <Route path="/piechart" element={<PieChart data={data}/>} />

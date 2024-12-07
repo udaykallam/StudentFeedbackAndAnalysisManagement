@@ -7,10 +7,9 @@ const MyCourses = () => {
   const [courses, setCourses] = useState([]);
   const [students, setStudents] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState(null);
-  const [showModal, setShowModal] = useState(false); // Modal visibility
-  const { facultyId } = useAuth(); // Assuming facultyId comes from AuthContext
+  const [showModal, setShowModal] = useState(false); 
+  const { facultyId } = useAuth();
 
-  // Fetch courses assigned to the faculty
   useEffect(() => {
     const fetchCourses = async () => {
       try {
@@ -25,7 +24,6 @@ const MyCourses = () => {
     fetchCourses();
   }, [facultyId]);
 
-  // Fetch students for a selected course
   const handleViewStudents = async (course) => {
     setSelectedCourse(course);
     try {
@@ -39,7 +37,6 @@ const MyCourses = () => {
     }
   };
 
-  // Close the modal
   const closeModal = () => {
     setShowModal(false);
     setStudents([]);
@@ -74,7 +71,6 @@ const MyCourses = () => {
         </div>
       </div>
 
-      {/* Modal to display students */}
       {showModal && (
         <div
           className="modal show d-block"

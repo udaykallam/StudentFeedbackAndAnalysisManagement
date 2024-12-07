@@ -9,7 +9,12 @@ const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const { storeTokenInLS } = useAuth();
+    // const {user} = useAuth();
     const navigate = useNavigate();
+
+    // if (user){
+    //     navigate('/home');
+    // }
 
     const handleLogin = async (event) => {
         event.preventDefault();
@@ -78,7 +83,9 @@ const Login = () => {
                                 required
                             />
                         </div>
-                        <br/>
+                        <p className="mt-3">
+                            <a href="/forgot-password">Forgot Password?</a>
+                        </p>
                         <center>
                         <button type="submit" className="btn btn-primary btn-block">Login</button>
                         </center>

@@ -1,62 +1,95 @@
-import React, { useState, useEffect } from 'react';
-import Home from '../Navbar';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
+import Home from "../Navbar";
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
-const Feedback = ({ courseId }) => {
-  const [questions, setQuestions] = useState([]);
-  const [answers, setAnswers] = useState({});
+
+const Feedback = () => {
+  const { formId } = useParams();
+  const [form, setForm] = useState(null);
+  const [responses, setResponses] = useState({});
+  const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get(`/api/feedback/questions/${courseId}`)
-      .then((response) => setQuestions(response.data))
-      .catch((error) => console.error('Error fetching questions:', error));
-  }, [courseId]);
+    axios
+      .get(`http://localhost:8080/api/feedback/forms/${formId}`)
+      .then((res) => setForm(res.data))
+      .catch((error) => console.error("Error fetching form data:", error));
+  }, [formId]);
 
-  const handleOptionChange = (questionId, option) => {
-    setAnswers({ ...answers, [questionId]: option });
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const feedback = {
-      courseId,
-      answers,
-    };
+  
+    if (!form || !form.id) {
+      alert("Feedback form ID is missing.");
+      return;
+    }
+    console.log(form.id);
+    
+  
+    try {
+      await axios.post("http://localhost:8080/api/feedback/submit", {
+        feedbackFormId: form.id, 
+        responses: responses,
+      });
+  
+      toast.success("Feedback submitted successfully!");
+      navigate('/feedbacklist');
+    } catch (error) {
+      console.error("Error submitting feedback:", error.response?.data || error.message);
+      toast.error("Failed to submit feedback. Please try again.");
+    }
+  };
+  
 
-    axios.post('/api/feedback/submit', feedback)
-      .then(() => alert('Feedback submitted successfully'))
-      .catch((error) => console.error('Error submitting feedback:', error));
+  const updateResponse = (questionId, answer) => {
+    setResponses({ ...responses, [questionId]: answer });
   };
 
-  return (
+  return form ? (
     <>
       <Home />
       <div className="container mt-5">
-        <h3>Feedback Form</h3>
         <form onSubmit={handleSubmit}>
-          {questions.map((question) => (
-            <div key={question.id} className="card shadow mb-3">
-              <div className="card-body">
-                <h5>{question.questionText}</h5>
-                {question.options.map((option, index) => (
+          <h3 className="text-center mb-4">{form.formName}</h3>
+
+          {form.questions.map((q) => (
+            <div key={q.id} className="mb-4">
+              <label className="form-label">{q.questionText}</label>
+              <div className="form-check">
+                {q.options.map((option, index) => (
                   <div key={index} className="form-check">
                     <input
                       type="radio"
-                      name={`question-${question.id}`}
+                      name={q.id}
+                      value={option}
+                      id={`${q.id}-${index}`}
                       className="form-check-input"
-                      onChange={() => handleOptionChange(question.id, option)}
+                      onChange={(e) => updateResponse(q.id, e.target.value)}
                     />
-                    <label className="form-check-label">{option}</label>
+                    <label htmlFor={`${q.id}-${index}`} className="form-check-label">
+                      {option}
+                    </label>
                   </div>
                 ))}
               </div>
             </div>
           ))}
-
-          <button type="submit" className="btn btn-success">Submit</button>
+          
+          <div className="d-flex justify-content-center">
+            <button type="submit" className="btn btn-primary w-50">
+              Submit Feedback
+            </button>
+          </div>
         </form>
       </div>
     </>
+  ) : (
+    <div className="text-center mt-5">
+      <p>Loading form...</p>
+    </div>
   );
 };
 
