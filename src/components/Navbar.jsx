@@ -70,8 +70,8 @@ const Home = () => {
                       {
                         user.role=='Faculty' && <Nav.Link href="/student-info">Student Information</Nav.Link>
                     }
-                      {
-                        user.role=='Faculty' && <Nav.Link href="/feedback-analysis">Feedback Analysis</Nav.Link>
+                     {
+                        user.role=='Faculty' && <Nav.Link href="/analysis">Analysis</Nav.Link>
                     }
 
                 </Nav>
