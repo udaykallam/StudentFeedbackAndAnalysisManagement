@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import {toast} from 'react-toastify';
 import Home from "../Navbar";
 
 const AddFeedback = () => {
@@ -15,12 +16,12 @@ const AddFeedback = () => {
         formName,
         questions,
       });
-      alert("Feedback form created successfully!");
+      toast.success("Feedback form created successfully!");
       setFormName(""); 
       setQuestions([{ questionText: "", options: [""] }]); 
     } catch (error) {
       console.error(error);
-      alert("Failed to create feedback form. Please try again.");
+      toast.error("Failed to create feedback form. Please try again.");
     }
   };
 
